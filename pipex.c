@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/10/31 15:42:18 by antofern         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:57:38 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void args_error(void)
 }
 
 //NO PROBADA
-void infile_to_stdin(char *infile, char **env)
+void infile_to_stdin(char *infile)
 {
 	int fd;
 
@@ -37,7 +37,7 @@ void infile_to_stdin(char *infile, char **env)
 }
 
 //NO PROBADA
-void stdout_to_pipe(t_pipe *pip)
+void stdout_to_pipe(t_pipe pip)
 {
 	if (pipe(pip)== -1 || dup2(pip[0], STDOUT_FILENO) == -1)
 	{
@@ -47,7 +47,7 @@ void stdout_to_pipe(t_pipe *pip)
 }
 
 //NO PROBADA
-void first_child(char *infile, char *cmd1, char **env, t_pipe *pip)
+void first_child(char **argv, char **env, t_pipe pip)
 {
 	pid_t	pid;
 
@@ -56,31 +56,34 @@ void first_child(char *infile, char *cmd1, char **env, t_pipe *pip)
 	if (pid == 0)
 	{
 		close(pip[1]);
-		infile_to_stdin(infile, env);
-		exec_cmd()
-
+		infile_to_stdin(argv[1]);
+		exec_cmd(2, argv, env);
 	}
 	else
 	{
-		close(pip[0])
+
+		close(pip[0]);
 	}
 
-	return (pipe);
+	return ;
 }
 
 //NO PROBADA
 int	main(int argc, char **argv, char **env)
 {
-	/*Parser*/
+	t_pipe	pip;
+
 	if (argc != 5)
 		args_error();
+	first_child(argv, env, pip);
 
-	first_child(argc[1], argc[2], env);
+	 //last_child
 
-	 /*last_child*/
+//	while (Esperar a cada proceso)
+//		wait();
 
-	while (/*Esperar a cada proceso*/)
-		wait();
 
-	 /*Free_envPATH*/
+	 //*Free_envPATH
+
+	 return (0);
 }

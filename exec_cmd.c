@@ -1,21 +1,70 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_path.c                                        :+:      :+:    :+:   */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:54:20 by antofern          #+#    #+#             */
-/*   Updated: 2024/10/31 15:44:14 by antofern         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:11:27 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	path_selector(char *pathname, char **paths, char *command)
+#include <assert.h>//BORRAR
+
+void	free_split(char **ch_chain)
 {
 	int i;
 
+	i = 0;
+	while (ch_chain[i])
+	{
+		free(ch_chain[i]);
+		i++;
+	}
+	free(ch_chain);
+}
+
+char	**get_paths(char **envp)
+{
+	int		i;
+	char	**paths;
+
+	if (envp = NULL)
+		return (NULL);
+	i = -1;
+	paths = NULL;
+	while(envp[++i] != NULL)
+	{
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
+		{
+			paths = ft_split(&(envp[i][5]), ':');
+			assert(paths != NULL); //////////////prueba
+			if(paths == NULL)
+				return (NULL);
+			break;
+		}
+	}
+	//TO DO: No solo notificar, tambien liberar lo que sea preciso
+	if (envp[i] == NULL)
+	{
+		free_split(paths);
+		write(1, "variable PATH no encontrada\n", 28);
+	}
+	//fin prueba
+	return (paths);
+}
+
+//Escribe en el buffer pathname la primera ruta+comando valida para ejecucion que encuentre. 
+//si no encuentra ruta valida retorna 1
+static int	path_selector(char *pathname, char **paths, char *command)
+{
+	int i;
+
+	if (pathname == NULL || paths == NULL || command == NULL)
+		return (1);
 	i = -1;
 	while(paths[++i] != NULL)
 	{
@@ -23,49 +72,48 @@ int	path_selector(char *pathname, char **paths, char *command)
 		ft_strlcat(pathname, "/", 1024);
 		ft_strlcat(pathname, command, 1024);
 		if(access(pathname, X_OK) == 0)
-		{
-			free_split(paths);
 			return (0);
-		}
 	}
 	return (1);
 }
 
 //LA funcion llamadora debera mostrar el codigo de errno en caso de que esta funcion retorne null
 //trata de implementar un buffer donde se concatene el path+/+comando en lugar de mallocear tanto
-int find_path(char **envp, char *command, char *pathname)
+static int find_path(char **env, char *command, char *pathname)
 {
 	char **paths;
-	size_t len;
 
 	if(access(command, X_OK) == 0)
 	{
 		ft_strlcpy(pathname, command, 1024);
 		return (0);
 	}
-	paths = get_paths(envp);
+	paths = get_paths(env);
 	if (paths == NULL)
 		return (1);
 	if (path_selector(pathname, paths, command) == 0)
+	{
+		free_split(paths);
 		return (0);
+	}
 	ft_putstr_fd(strerror(ENOENT), 2);
 	free_split(paths);
 	return (1);
 }
 
-void	exec_cmd(int narg, char **argv, char **envp)
+void	exec_cmd(int index_arg, char **argv, char **env)
 {
 	char pathname[1024];
 	char **cmdflags;
 
-	cmdflags = ft_split(argv[narg], ' ');
+	cmdflags = ft_split(argv[index_arg], ' ');
 	if (cmdflags == NULL)
 		exit (1);
-	if (find_path(envp, cmdflags[0], pathname) == 1)
+	if (find_path(env, cmdflags[0], pathname) == 1)
 	{
 		free_split(cmdflags);
 		exit (1);
 	}
-	execve(pathname, cmdflags, envp);
+	execve(pathname, cmdflags, env);
 	exit (1);
 }

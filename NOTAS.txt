@@ -1,0 +1,1 @@
+comprobar que admite ejecutar ruta relativa /usr/bin/ls o lo que sea

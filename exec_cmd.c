@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:54:20 by antofern          #+#    #+#             */
-/*   Updated: 2024/10/31 17:11:27 by antofern         ###   ########.fr       */
+/*   Updated: 2024/11/01 01:19:40 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	**get_paths(char **envp)
 	int		i;
 	char	**paths;
 
-	if (envp = NULL)
+	if (envp == NULL)
 		return (NULL);
 	i = -1;
 	paths = NULL;

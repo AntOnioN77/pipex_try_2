@@ -6,11 +6,13 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/10/31 16:57:38 by antofern         ###   ########.fr       */
+/*   Updated: 2024/11/01 21:47:01 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+#include "trace_tools/trace_tools.h"
 
 //NO PROBADA
 void args_error(void)
@@ -31,19 +33,44 @@ void infile_to_stdin(char *infile)
 		perror(NULL);
 		exit(1);
 	}
-	dup2(fd, STDIN_FILENO);
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror(NULL);
+		exit(1);
+	}
+	close(fd);
+	
+}
+
+void stdout_to_outfile(char *outfile)
+{
+	int fd;
+
+	fd = open(outfile, O_WRONLY | O_CREAT, 00744);
+	if (fd == -1)
+	{
+		perror(NULL);
+		exit(1);
+	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror(NULL);
+		exit(1);
+	}
 	close(fd);
 	
 }
 
 //NO PROBADA
+//dirige stdout hacia pipe[0] (extremo de lectura)
 void stdout_to_pipe(t_pipe pip)
 {
-	if (pipe(pip)== -1 || dup2(pip[0], STDOUT_FILENO) == -1)
+	if (dup2(pip[1], STDOUT_FILENO) == -1)
 	{
 		perror(NULL);
 		exit(1);
 	}
+	close(pip[1]);
 }
 
 //NO PROBADA
@@ -51,39 +78,65 @@ void first_child(char **argv, char **env, t_pipe pip)
 {
 	pid_t	pid;
 
-	stdout_to_pipe(pip);
+	if (pipe(pip)== -1)
+	{
+		perror(NULL);
+		exit(1);
+	}
 	pid = fork();
 	if (pid == 0)
 	{
-		close(pip[1]);
 		infile_to_stdin(argv[1]);
+		stdout_to_pipe(pip);
+		close(pip[0]);
 		exec_cmd(2, argv, env);
 	}
 	else
 	{
-
-		close(pip[0]);
+		close(pip[1]);
 	}
 
 	return ;
+}
+
+void last_child(char **argv, char **env, t_pipe pip)
+{
+	pid_t pid;
+
+//int id = get_id();//Borrar
+	pid = fork();
+	if (pid == 0)
+	{
+		if (dup2(pip[0], STDIN_FILENO) == -1)
+		{
+			perror(NULL);
+			exit(1);
+		}
+		close(pip[0]);
+//		close(pip[1]);
+		stdout_to_outfile(argv[4]);
+		exec_cmd(3, argv, env);	
+	}
+	else
+	{
+		close(pip[0]);
+	}
 }
 
 //NO PROBADA
 int	main(int argc, char **argv, char **env)
 {
 	t_pipe	pip;
+	int i;
+	int status;
 
 	if (argc != 5)
 		args_error();
 	first_child(argv, env, pip);
+	last_child(argv, env, pip);
 
-	 //last_child
-
-//	while (Esperar a cada proceso)
-//		wait();
-
-
-	 //*Free_envPATH
-
+	i = 0;
+	while (i++ < 2)
+		wait(&status);
 	 return (0);
 }

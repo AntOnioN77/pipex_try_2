@@ -1,1 +1,4 @@
+hay que eliminar outfile si existe
+
+
 comprobar que admite ejecutar ruta relativa /usr/bin/ls o lo que sea

@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/11/01 21:47:01 by antofern         ###   ########.fr       */
+/*   Updated: 2024/11/02 04:33:24 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void stdout_to_outfile(char *outfile)
 {
 	int fd;
 
-	fd = open(outfile, O_WRONLY | O_CREAT, 00744);
+	fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 00744);
 	if (fd == -1)
 	{
 		perror(NULL);
@@ -103,7 +103,6 @@ void last_child(char **argv, char **env, t_pipe pip)
 {
 	pid_t pid;
 
-//int id = get_id();//Borrar
 	pid = fork();
 	if (pid == 0)
 	{
@@ -138,5 +137,5 @@ int	main(int argc, char **argv, char **env)
 	i = 0;
 	while (i++ < 2)
 		wait(&status);
-	 return (0);
+	 return (WEXITSTATUS(status));
 }

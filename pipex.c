@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/11/02 04:33:24 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:05:15 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,49 @@
 #include "trace_tools/trace_tools.h"
 
 //NO PROBADA
-void args_error(void)
+void	args_error(void)
 {
 	write(1, "Incorrect number of arguments.\n"
-	"Use ./pipex <infile> <command 1> <command 2> outfile", 84);
+		"Use ./pipex <infile> <command 1> <command 2> outfile", 84);
 	exit(1);
 }
 
 //NO PROBADA
-void infile_to_stdin(char *infile)
+void	infile_to_stdin(char *infile)
 {
 	int fd;
 
 	fd = open(infile, O_RDONLY);
 	if (fd == -1)
 	{
-		perror(NULL);
+		ft_putstr_fd("pipex: ", 2);
+		perror(infile);
 		exit(1);
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
-		perror(NULL);
+		ft_putstr_fd("pipex: ", 2);
+		perror(infile);
 		exit(1);
 	}
 	close(fd);
-	
 }
 
 void stdout_to_outfile(char *outfile)
 {
 	int fd;
 
-	fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 00744);
+	fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 00664);
 	if (fd == -1)
 	{
-		perror(NULL);
+		ft_putstr_fd("pipex: ", 2);
+		perror(outfile);
 		exit(1);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
-		perror(NULL);
+		ft_putstr_fd("pipex: ", 2);
+		perror(outfile);
 		exit(1);
 	}
 	close(fd);
@@ -67,6 +70,7 @@ void stdout_to_pipe(t_pipe pip)
 {
 	if (dup2(pip[1], STDOUT_FILENO) == -1)
 	{
+		ft_putstr_fd("pipex: ", 2);
 		perror(NULL);
 		exit(1);
 	}

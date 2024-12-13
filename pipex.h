@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 23:32:42 by antofern          #+#    #+#             */
-/*   Updated: 2024/10/31 16:48:28 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:46:50 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@
 typedef int t_pipe[2];
 
 void	exec_cmd(int index_arg, char **argv, char **env);
+char	**ft_splitqu(char const *s, char c);
 
 #endif

@@ -4,9 +4,9 @@ CFLAGS = -Wall -Wextra -Werror
 CPPFLAGS = -I. -I/libft/headers
 DBGFLAGS = -g3
 LDFLAGS = -L ./libft -lft
-SOURCES = pipex.c exec_cmd.c
+SOURCES = pipex.c exec_cmd.c ft_splitqu.c
 OBJECTS = $(SOURCES:.c=.o)
-HEADERS = libft/headers/libft.h
+HEADERS = libft/headers/libft.h pipex.h
 
 all: $(NAME)
 debug: CFLAGS += $(DBGFLAGS)

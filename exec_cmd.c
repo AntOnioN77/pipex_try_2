@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:54:20 by antofern          #+#    #+#             */
-/*   Updated: 2024/11/01 01:19:40 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:02:36 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,21 @@ static int find_path(char **env, char *command, char *pathname)
 		free_split(paths);
 		return (0);
 	}
-	ft_putstr_fd(strerror(ENOENT), 2);
+	ft_putstr_fd("pipex: ", 2);
+	perror(command);
+	//ft_putstr_fd(strerror(ENOENT), 2);
 	free_split(paths);
 	return (1);
+}
+
+void printarray(char **arr) //funcion de prueba, borrar
+{
+	int i = 0;
+	while(arr[i])
+	{
+		fprintf(stderr,"%s\n", arr[i]);
+		i++;
+	}
 }
 
 void	exec_cmd(int index_arg, char **argv, char **env)
@@ -106,7 +118,8 @@ void	exec_cmd(int index_arg, char **argv, char **env)
 	char pathname[1024];
 	char **cmdflags;
 
-	cmdflags = ft_split(argv[index_arg], ' ');
+	cmdflags = ft_splitqu(argv[index_arg], ' ');
+//printarray(cmdflags);
 	if (cmdflags == NULL)
 		exit (1);
 	if (find_path(env, cmdflags[0], pathname) == 1)

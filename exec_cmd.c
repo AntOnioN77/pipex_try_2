@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:54:20 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/13 15:02:36 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:40:04 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,11 @@ char	**get_paths(char **envp)
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
 			paths = ft_split(&(envp[i][5]), ':');
-			assert(paths != NULL); //////////////prueba
 			if(paths == NULL)
+			{
+ft_putstr_fd("-----------46\n", 2);
 				return (NULL);
+			}
 			break;
 		}
 	}
@@ -51,7 +53,7 @@ char	**get_paths(char **envp)
 	if (envp[i] == NULL)
 	{
 		free_split(paths);
-		write(1, "variable PATH no encontrada\n", 28);
+		write(1, "variable PATH no encontrada\n", 28);//CORREGIR
 	}
 	//fin prueba
 	return (paths);

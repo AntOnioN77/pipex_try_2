@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/13 15:05:15 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/19 12:22:56 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,8 @@ void last_child(char **argv, char **env, t_pipe pip)
 	}
 	else
 	{
-		close(pip[0]);
+//		close(pip[0]);
+		return (pid);
 	}
 }
 

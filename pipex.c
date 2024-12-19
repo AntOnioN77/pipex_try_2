@@ -6,14 +6,13 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/19 12:22:56 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/19 13:36:05 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 #include "trace_tools/trace_tools.h"
-
 //NO PROBADA
 void	args_error(void)
 {
@@ -78,7 +77,7 @@ void stdout_to_pipe(t_pipe pip)
 }
 
 //NO PROBADA
-void first_child(char **argv, char **env, t_pipe pip)
+int first_child(char **argv, char **env, t_pipe pip)
 {
 	pid_t	pid;
 
@@ -98,12 +97,13 @@ void first_child(char **argv, char **env, t_pipe pip)
 	else
 	{
 		close(pip[1]);
+		return (pid);
 	}
 
-	return ;
+	return (-1);
 }
 
-void last_child(char **argv, char **env, t_pipe pip)
+int last_child(char **argv, char **env, t_pipe pip)
 {
 	pid_t pid;
 
@@ -122,25 +122,25 @@ void last_child(char **argv, char **env, t_pipe pip)
 	}
 	else
 	{
-//		close(pip[0]);
+		close(pip[0]);
 		return (pid);
 	}
+	return (-1);
 }
 
 //NO PROBADA
 int	main(int argc, char **argv, char **env)
 {
 	t_pipe	pip;
-	int i;
 	int status;
+	int pid_last;
+	int pid_first;
 
 	if (argc != 5)
 		args_error();
-	first_child(argv, env, pip);
-	last_child(argv, env, pip);
-
-	i = 0;
-	while (i++ < 2)
-		wait(&status);
-	 return (WEXITSTATUS(status));
+	pid_first = first_child(argv, env, pip);
+	pid_last = last_child(argv, env, pip);
+	waitpid(pid_first, &status, 0);
+	waitpid(pid_last, &status, 0);
+	 return ((((status) & 0xff00) >> 8));//EXPANSION DIRECTA DE WEXISTATUS(status) UN MACRO QUE SEGURAMENTE ESTA POHIBIDO POR LA NORMA
 }

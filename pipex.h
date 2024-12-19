@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 23:32:42 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/19 13:36:11 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:13:36 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <errno.h>
 # include <string.h>
 # include <sys/wait.h>
+# include <linux/limits.h>
 # include "libft/headers/libft.h"
 
 typedef int t_pipe[2];

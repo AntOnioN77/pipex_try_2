@@ -6,13 +6,12 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:54:20 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/13 17:40:04 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:52:15 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-#include <assert.h>//BORRAR
+#include <linux/limits.h>
 
 void	free_split(char **ch_chain)
 {
@@ -70,13 +69,13 @@ static int	path_selector(char *pathname, char **paths, char *command)
 	i = -1;
 	while(paths[++i] != NULL)
 	{
-		ft_strlcpy(pathname, paths[i], 1024);
-		ft_strlcat(pathname, "/", 1024);
-		ft_strlcat(pathname, command, 1024);
+		ft_strlcpy(pathname, paths[i], PATH_MAX);
+		ft_strlcat(pathname, "/", PATH_MAX);
+		ft_strlcat(pathname, command, PATH_MAX);
 		if(access(pathname, X_OK) == 0)
 			return (0);
 	}
-	return (1);
+	return (127);
 }
 
 //LA funcion llamadora debera mostrar el codigo de errno en caso de que esta funcion retorne null
@@ -84,16 +83,18 @@ static int	path_selector(char *pathname, char **paths, char *command)
 static int find_path(char **env, char *command, char *pathname)
 {
 	char **paths;
+	int path_return;
 
 	if(access(command, X_OK) == 0)
 	{
-		ft_strlcpy(pathname, command, 1024);
+		ft_strlcpy(pathname, command, PATH_MAX);
 		return (0);
 	}
 	paths = get_paths(env);
 	if (paths == NULL)
 		return (1);
-	if (path_selector(pathname, paths, command) == 0)
+	path_return = path_selector(pathname, paths, command);
+	if (path_return == 0)
 	{
 		free_split(paths);
 		return (0);
@@ -102,7 +103,7 @@ static int find_path(char **env, char *command, char *pathname)
 	perror(command);
 	//ft_putstr_fd(strerror(ENOENT), 2);
 	free_split(paths);
-	return (1);
+	return (path_return);
 }
 
 void printarray(char **arr) //funcion de prueba, borrar
@@ -117,17 +118,19 @@ void printarray(char **arr) //funcion de prueba, borrar
 
 void	exec_cmd(int index_arg, char **argv, char **env)
 {
-	char pathname[1024];
+	char pathname[PATH_MAX];
 	char **cmdflags;
+	int path_return;
 
 	cmdflags = ft_splitqu(argv[index_arg], ' ');
 //printarray(cmdflags);
 	if (cmdflags == NULL)
 		exit (1);
-	if (find_path(env, cmdflags[0], pathname) == 1)
+	path_return = find_path(env, cmdflags[0], pathname);
+	if (path_return != 0)
 	{
 		free_split(cmdflags);
-		exit (1);
+		exit (path_return);
 	}
 	execve(pathname, cmdflags, env);
 	exit (1);

@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/19 13:41:54 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:41:50 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,11 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc != 5)
 		args_error();
+	if(ft_strlen(argv[2]) >= PATH_MAX || ft_strlen(argv[3]) >= PATH_MAX)//PARECE QUE BASH NO USA ESTE LIMITE DE LA MANERA ESPERADA
+	{
+		ft_putstr_fd(strerror(ENAMETOOLONG), 2);
+		return (ENAMETOOLONG);
+	}
 	first_child(argv, env, pip);
 	pid_last = last_child(argv, env, pip);
 	waitpid(pid_last, &status, 0);

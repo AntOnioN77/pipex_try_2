@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/19 13:36:05 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/19 13:41:54 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,12 @@ int	main(int argc, char **argv, char **env)
 	t_pipe	pip;
 	int status;
 	int pid_last;
-	int pid_first;
 
 	if (argc != 5)
 		args_error();
-	pid_first = first_child(argv, env, pip);
+	first_child(argv, env, pip);
 	pid_last = last_child(argv, env, pip);
-	waitpid(pid_first, &status, 0);
 	waitpid(pid_last, &status, 0);
+	wait(NULL);
 	 return ((((status) & 0xff00) >> 8));//EXPANSION DIRECTA DE WEXISTATUS(status) UN MACRO QUE SEGURAMENTE ESTA POHIBIDO POR LA NORMA
 }

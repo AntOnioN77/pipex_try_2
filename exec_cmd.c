@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:54:20 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/19 17:52:15 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/20 23:03:47 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,11 @@ char	**get_paths(char **envp)
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
 			paths = ft_split(&(envp[i][5]), ':');
-			if(paths == NULL)
-			{
-ft_putstr_fd("-----------46\n", 2);
+			if(*paths == NULL || **paths == '\0')
 				return (NULL);
-			}
 			break;
 		}
 	}
-	//TO DO: No solo notificar, tambien liberar lo que sea preciso
-	if (envp[i] == NULL)
-	{
-		free_split(paths);
-		write(1, "variable PATH no encontrada\n", 28);//CORREGIR
-	}
-	//fin prueba
 	return (paths);
 }
 
@@ -85,35 +75,28 @@ static int find_path(char **env, char *command, char *pathname)
 	char **paths;
 	int path_return;
 
-	if(access(command, X_OK) == 0)
+	if(command && (access(command, X_OK) == 0))
 	{
 		ft_strlcpy(pathname, command, PATH_MAX);
 		return (0);
 	}
 	paths = get_paths(env);
-	if (paths == NULL)
-		return (1);
 	path_return = path_selector(pathname, paths, command);
 	if (path_return == 0)
 	{
 		free_split(paths);
 		return (0);
 	}
-	ft_putstr_fd("pipex: ", 2);
-	perror(command);
+	//ft_putstr_fd("pipex: ", 2);
+	//ft_putstr_fd(command, 2);
+	if (paths == NULL)
+		ft_putstr_fd("pipex: No such file or directory\n", 2);
+	else
+		ft_putstr_fd(": command not found\n", 2);
+	//perror(command);
 	//ft_putstr_fd(strerror(ENOENT), 2);
 	free_split(paths);
 	return (path_return);
-}
-
-void printarray(char **arr) //funcion de prueba, borrar
-{
-	int i = 0;
-	while(arr[i])
-	{
-		fprintf(stderr,"%s\n", arr[i]);
-		i++;
-	}
 }
 
 void	exec_cmd(int index_arg, char **argv, char **env)

@@ -1,1 +1,10 @@
-      0       0       0
+total 36
+drwxrwxr-x 6 fibo fibo 4096 dic 20 12:41 .
+drwxrwxr-x 7 fibo fibo 4096 dic 20 13:03 ..
+drwxrwxr-x 2 fibo fibo 4096 dic 12 12:13 assets
+drwxrwxr-x 8 fibo fibo 4096 dic 12 12:59 .git
+drwxrwxr-x 2 fibo fibo 4096 dic 12 12:13 inc
+-rw-rw-r-- 1 fibo fibo  771 dic 12 12:13 README.md
+drwxrwxr-x 2 fibo fibo 4096 dic 12 12:13 src
+-rw-rw-r-- 1 fibo fibo 3236 dic 20 12:41 tester.log
+-rwxrwxr-x 1 fibo fibo 2903 dic 12 12:13 test.sh

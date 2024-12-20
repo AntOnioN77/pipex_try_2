@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/19 17:41:50 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:25:21 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	infile_to_stdin(char *infile)
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		ft_putstr_fd("pipex: ", 2);
-		perror(infile);
+		perror(NULL);
 		exit(1);
 	}
 	close(fd);
@@ -56,7 +56,7 @@ void stdout_to_outfile(char *outfile)
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
 		ft_putstr_fd("pipex: ", 2);
-		perror(outfile);
+		perror(NULL);
 		exit(1);
 	}
 	close(fd);
@@ -99,7 +99,6 @@ int first_child(char **argv, char **env, t_pipe pip)
 		close(pip[1]);
 		return (pid);
 	}
-
 	return (-1);
 }
 

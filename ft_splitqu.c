@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:02:09 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/13 12:06:14 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/20 10:38:27 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,21 @@ static char	*ft_strndup(const char *src, int length)
 
 int skipquotes(char **end, char **start)
 {
-	char *tmp;
+	char	*tmp;
+	char	q;
 
-	if(**end == 39)
+	if (**end == 39 || **end == '"')
 	{
-#include <stdio.h>
-//fprintf(stderr, "en skipquotes-------------");
+		q = **end;
 		if (start && *start)
 			(*start)++;
 		tmp = *end;
 		while(*tmp != '\0')
 		{
 			tmp++;
-			if(*tmp == 39)
+			if(*tmp == q)
 			{
 				*end = tmp;
-//#include <stdio.h>
-//fprintf(stderr, "en skipquotes-----> *end:%s\n", *end);
 				return 1;
 			}
 		}

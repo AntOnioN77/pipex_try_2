@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:02:09 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/21 12:47:32 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/21 13:29:02 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*ft_strndup(const char *src, int length)
 	return (new_string);
 }
 
-int skipquotes(char **end, char **start)
+int	skipquotes(char **end, char **start)
 {
 	char	*tmp;
 	char	q;
@@ -84,6 +84,24 @@ static int	ft_count_substr(const char *str, char tkn)
 	return (count);
 }
 
+static int	delimit_next_str(char **next_str, char const **src_str, char tkn)
+{
+	int	quote;
+
+	quote = 0;
+	while (**src_str == tkn && **src_str != '\0')
+	{
+		(*src_str)++;
+		(*next_str)++;
+	}
+    while (**next_str != tkn && **next_str != '\0')
+	{
+		quote = skipquotes(next_str, (char **)src_str);
+		(*next_str)++;
+	}
+	return	quote;
+}
+
 static int	ft_to_chop(char **array_substr, int substring_count,
 char const *src_str, char tkn)
 {
@@ -96,16 +114,7 @@ char const *src_str, char tkn)
 	next_str = (char *)src_str;
 	while (++i < substring_count)
 	{
-		while (*src_str == tkn && *src_str != '\0')
-		{
-			src_str++;
-			next_str++;
-		}
-		while (*next_str != tkn && *next_str != '\0')
-		{
-			quote = skipquotes(&next_str, (char **)&src_str);
-			next_str++;
-		}
+		quote = delimit_next_str(&next_str, &src_str, tkn);
 		if (quote == 1)
 			array_substr[i] = ft_strndup(src_str, ((next_str - 1) - src_str));
 		else

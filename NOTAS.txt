@@ -1,4 +1,15 @@
-hay que eliminar outfile si existe
+1- hay que eliminar outfile si existe
+2- comprobar que admite ejecutar ruta relativa /usr/bin/ls o lo que sea
 
 
-comprobar que admite ejecutar ruta relativa /usr/bin/ls o lo que sea
+
+
+
+Hecho:
+
+3- bash no falla en el limite teorico, necesita50 veces mas (50 * (PATH_MAX + NAME_MAX + 1))
+		aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+		bash: /usr/lib/command-not-found: La lista de argumentos es demasiado larga
+		fibo@fibo-B660-GAMING-X-DDR4:~/Documentos/pipex$ $?
+		126: no se encontró la orden
+	LO CONTROLA EL SO

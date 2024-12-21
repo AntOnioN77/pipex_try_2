@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:02:09 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/20 10:38:27 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/21 12:47:32 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ int skipquotes(char **end, char **start)
 		if (start && *start)
 			(*start)++;
 		tmp = *end;
-		while(*tmp != '\0')
+		while (*tmp != '\0')
 		{
 			tmp++;
-			if(*tmp == q)
+			if (*tmp == q)
 			{
 				*end = tmp;
-				return 1;
+				return (1);
 			}
 		}
 		if (start && *start)
@@ -65,8 +65,6 @@ static int	ft_count_substr(const char *str, char tkn)
 	int	count;
 	int	check;
 
-#include <stdio.h>
-//fprintf(stderr, "en ft_count_substr-------------");
 	count = 0;
 	while (*str != '\0')
 	{
@@ -77,8 +75,6 @@ static int	ft_count_substr(const char *str, char tkn)
 		{
 			skipquotes((char **)&str, NULL);
 			str++;
-#include <stdio.h>
-//fprintf(stderr, "str:%s\n", str);
 		}
 		while (*str == tkn && *str != '\0')
 			str++;
@@ -88,7 +84,7 @@ static int	ft_count_substr(const char *str, char tkn)
 	return (count);
 }
 
-static int	ft_to_chop(char **array_substrings, int substring_count,
+static int	ft_to_chop(char **array_substr, int substring_count,
 char const *src_str, char tkn)
 {
 	int		i;
@@ -111,13 +107,13 @@ char const *src_str, char tkn)
 			next_str++;
 		}
 		if (quote == 1)
-			array_substrings[i] = ft_strndup(src_str, ((next_str - 1) - src_str));
+			array_substr[i] = ft_strndup(src_str, ((next_str - 1) - src_str));
 		else
-			array_substrings[i] = ft_strndup(src_str, (next_str - src_str));
-		if (array_substrings[i] == NULL)
+			array_substr[i] = ft_strndup(src_str, (next_str - src_str));
+		if (array_substr[i] == NULL)
 		{
 			while (i >= 0)
-				free(array_substrings[i--]);
+				free(array_substr[i--]);
 			return (1);
 		}
 		src_str = next_str;
@@ -127,14 +123,11 @@ char const *src_str, char tkn)
 
 char	**ft_splitqu(char const *s, char c)
 {
-#include <stdio.h>
-//fprintf(stderr, "en ft_splitq-------------");
-	int		substring_count;
-	char	**array_substrings;
+	int			substring_count;
+	char		**array_substrings;
 	const char	*copy_s;
 
-	copy_s = s; 
-
+	copy_s = s;
 	if (!s)
 		return (NULL);
 	substring_count = ft_count_substr(copy_s, c);

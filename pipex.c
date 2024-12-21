@@ -6,14 +6,12 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 17:07:27 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/20 13:25:21 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/21 12:42:54 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-#include "trace_tools/trace_tools.h"
-//NO PROBADA
 void	args_error(void)
 {
 	write(1, "Incorrect number of arguments.\n"
@@ -21,67 +19,11 @@ void	args_error(void)
 	exit(1);
 }
 
-//NO PROBADA
-void	infile_to_stdin(char *infile)
-{
-	int fd;
-
-	fd = open(infile, O_RDONLY);
-	if (fd == -1)
-	{
-		ft_putstr_fd("pipex: ", 2);
-		perror(infile);
-		exit(1);
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		ft_putstr_fd("pipex: ", 2);
-		perror(NULL);
-		exit(1);
-	}
-	close(fd);
-}
-
-void stdout_to_outfile(char *outfile)
-{
-	int fd;
-
-	fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 00664);
-	if (fd == -1)
-	{
-		ft_putstr_fd("pipex: ", 2);
-		perror(outfile);
-		exit(1);
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		ft_putstr_fd("pipex: ", 2);
-		perror(NULL);
-		exit(1);
-	}
-	close(fd);
-	
-}
-
-//NO PROBADA
-//dirige stdout hacia pipe[0] (extremo de lectura)
-void stdout_to_pipe(t_pipe pip)
-{
-	if (dup2(pip[1], STDOUT_FILENO) == -1)
-	{
-		ft_putstr_fd("pipex: ", 2);
-		perror(NULL);
-		exit(1);
-	}
-	close(pip[1]);
-}
-
-//NO PROBADA
-int first_child(char **argv, char **env, t_pipe pip)
+int	first_child(char **argv, char **env, t_pipe pip)
 {
 	pid_t	pid;
 
-	if (pipe(pip)== -1)
+	if (pipe(pip) == -1)
 	{
 		perror(NULL);
 		exit(1);
@@ -102,9 +44,9 @@ int first_child(char **argv, char **env, t_pipe pip)
 	return (-1);
 }
 
-int last_child(char **argv, char **env, t_pipe pip)
+int	last_child(char **argv, char **env, t_pipe pip)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid == 0)
@@ -115,9 +57,8 @@ int last_child(char **argv, char **env, t_pipe pip)
 			exit(1);
 		}
 		close(pip[0]);
-//		close(pip[1]);
 		stdout_to_outfile(argv[4]);
-		exec_cmd(3, argv, env);	
+		exec_cmd(3, argv, env);
 	}
 	else
 	{
@@ -127,16 +68,18 @@ int last_child(char **argv, char **env, t_pipe pip)
 	return (-1);
 }
 
-//NO PROBADA
 int	main(int argc, char **argv, char **env)
 {
 	t_pipe	pip;
-	int status;
-	int pid_last;
+	int		status;
+	int		pid_last;
 
 	if (argc != 5)
 		args_error();
-	if(ft_strlen(argv[2]) >= PATH_MAX || ft_strlen(argv[3]) >= PATH_MAX)//PARECE QUE BASH NO USA ESTE LIMITE DE LA MANERA ESPERADA
+	if (ft_strlen(argv[1]) >= (PATH_MAX + NAME_MAX)
+		|| ft_strlen(argv[2]) >= (PATH_MAX + NAME_MAX)
+		|| ft_strlen(argv[3]) >= (PATH_MAX + NAME_MAX)
+		|| ft_strlen(argv[4]) >= (PATH_MAX + NAME_MAX))
 	{
 		ft_putstr_fd(strerror(ENAMETOOLONG), 2);
 		return (ENAMETOOLONG);
@@ -145,5 +88,5 @@ int	main(int argc, char **argv, char **env)
 	pid_last = last_child(argv, env, pip);
 	waitpid(pid_last, &status, 0);
 	wait(NULL);
-	 return ((((status) & 0xff00) >> 8));//EXPANSION DIRECTA DE WEXISTATUS(status) UN MACRO QUE SEGURAMENTE ESTA POHIBIDO POR LA NORMA
+	return ((((status) & 0xff00) >> 8));
 }

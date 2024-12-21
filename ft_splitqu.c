@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:02:09 by antofern          #+#    #+#             */
-/*   Updated: 2024/12/21 13:29:02 by antofern         ###   ########.fr       */
+/*   Updated: 2024/12/21 14:04:46 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,12 @@ static int	delimit_next_str(char **next_str, char const **src_str, char tkn)
 		(*src_str)++;
 		(*next_str)++;
 	}
-    while (**next_str != tkn && **next_str != '\0')
+	while (**next_str != tkn && **next_str != '\0')
 	{
 		quote = skipquotes(next_str, (char **)src_str);
 		(*next_str)++;
 	}
-	return	quote;
+	return (quote);
 }
 
 static int	ft_to_chop(char **array_substr, int substring_count,
@@ -109,7 +109,6 @@ char const *src_str, char tkn)
 	char	*next_str;
 	int		quote;
 
-	quote = 0;
 	i = -1;
 	next_str = (char *)src_str;
 	while (++i < substring_count)
